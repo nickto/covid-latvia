@@ -12,7 +12,6 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 ## Download data
 download:
-	@echo ${PROJECT_DIR}
 	bash scripts/download.sh
 
 #################################################################################
