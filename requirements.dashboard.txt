@@ -1,0 +1,8 @@
+matplotlib
+numpy
+pandas
+pyyaml
+seaborn
+streamlit
+requests
+bokeh

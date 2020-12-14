@@ -1,9 +1,10 @@
 version: "3"
 services:
-  streamlit:
+  dashboard:
     build:
       context: .
       dockerfile: Dockerfile
+      target: dashboard
     user: root
     ports:
       - "8501:8501"
@@ -15,4 +16,14 @@ services:
     command:
       - run
       - ./dashboard/main.py
-
+  data:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: data
+    user: root
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint:
+      - python

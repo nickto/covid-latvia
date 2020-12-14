@@ -12,21 +12,19 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 ## Download data
 download:
-	python scripts/download.py
+	docker-compose run data scripts/download.py
 
 ## Preprocess data
 preprocess:
-	python scripts/clean.py	
+	docker-compose run data scripts/clean.py	
 
 ## Download and clean
-data: download clean
+data: clean download preprocess
 
 ## Clean data
 clean:
 	rm -rf data/raw/*
 	rm -rf data/processed/*
-
-	
 
 #################################################################################
 # PROJECT RULES                                                                 #

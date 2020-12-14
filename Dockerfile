@@ -1,6 +1,12 @@
-FROM python:3.8
+FROM python:3.8 AS common
 COPY . /app
 WORKDIR /app
-RUN pip install --no-cache-dir -r requirements.txt
+
+FROM common as data
+RUN pip install --no-cache-dir -r requirements.data.txt
+ENTRYPOINT [ "python" ]
+
+FROM common as dashboard
+RUN pip install --no-cache-dir -r requirements.dashboard.txt
 ENTRYPOINT [ "streamlit" ]
 CMD [ "run", "dashboard/main.py" ]
