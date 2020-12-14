@@ -1,0 +1,19 @@
+open_data_portal:
+  host: https://data.gov.lv/dati/eng
+data:
+  cases:
+    id: covid-19
+    raw:
+      data: data/raw/cases.csv
+      metadata: data/raw/cases_meta.json
+    processed:
+      data: data/processed/cases.csv
+      metadata: data/processed/cases_meta.yaml
+  cases_by_municipalities:
+    id: covid-19-pa-adm-terit
+    raw:
+      data: data/raw/cases_by_mun.csv
+      metadata: data/raw/cases_by_mun_meta.json
+    processed:
+      data: data/processed/cases_by_mun.csv
+      metadata: data/processed/cases_by_mun_meta.yaml

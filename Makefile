@@ -12,7 +12,16 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 ## Download data
 download:
-	bash scripts/download.sh
+	python scripts/download.py
+
+## Clean data
+clean:
+	python scripts/clean.py	
+
+## Download and clean
+data: download clean
+
+	
 
 #################################################################################
 # PROJECT RULES                                                                 #
