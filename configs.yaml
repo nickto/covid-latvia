@@ -3,17 +3,71 @@ open_data_portal:
 data:
   cases:
     id: covid-19
-    raw:
-      data: data/raw/cases.csv
-      metadata: data/raw/cases_meta.json
-    processed:
-      data: data/processed/cases.csv
-      metadata: data/processed/cases_meta.yaml
+    name: COVID-19
+    raw: 
+      path: data/raw/cases.csv
+      format: csv
+      encoding: WINDOWS-1252
+      sep: ;
+      quotechar: "\""
+      na_values: 
+        - "..."
+        - "…"
+      rename:
+        Datums: date
+        TestuSkaits: tests
+        ApstiprinataCOVID19InfekcijaSkaits: positive
+        Ipatsvars: positive_proportion
+        IzarstetoPacientuSkaits: recovered
+        MirusoPersonuSkaits: died
+        ApstiprinatiVecGr_0-9Gadi: positive_0y_to_9y
+        ApstiprinatiVecGr_10-19Gadi: positive_10y_to_19y
+        ApstiprinatiVecGr_20-29Gadi: positive_20y_to_29y
+        ApstiprinatiVecGr_30-39Gadi: positive_30y_to_39y
+        ApstiprinatiVecGr_40-49Gadi: positive_40y_to_49y
+        ApstiprinatiVecGr_50-59Gadi: positive_50y_to_59y
+        ApstiprinatiVecGr_60-69Gadi: positive_60y_to_69y
+        ApstiprinatiVecGr_70GadiUnVairak: positive_70y_and_older
+        ApstiprinatiVecGr_70-79Gadi: positive_70y_to_79y
+        ApstiprinatiVecGr_80GadiUnVairak: positive_80y_and_older
+    processed: 
+      path: data/processed/cases.csv
+      format: csv
   cases_by_municipalities:
     id: covid-19-pa-adm-terit
+    name: COVID-19 pa administratīvajām teritorijām
+    raw: 
+        path: data/raw/cases_by_mun.csv
+        format: csv
+        encoding: UTF-8
+        sep: ;
+        quotechar: "\""
+        na_values: 
+          - "..."
+        rename:
+          Datums: date
+          AdministrativiTeritorialasVienibasNosaukums: name
+          ATVK: atvk
+          ApstiprinataCOVID19infekcija: confirmed
+          AktivaCOVID19infekcija: sick
+          14DienuKumulativaSaslimstiba: cumulative_14_days
+    processed: 
+        path: data/processed/cases_by_mun.csv
+        format: csv
+  population:
+    id: latvijas-iedzivotaju-skaits-pasvaldibas
+    name: ISPV_Pasvaldibas_iedzivotaju_skaits_20200701.xlsx
     raw:
-      data: data/raw/cases_by_mun.csv
-      metadata: data/raw/cases_by_mun_meta.json
+      path: data/raw/population.xlsx
+      format: xlsx
+      sheet: ISPV_Pasvaldibas_iedzivotaju_sk
+      header: true
+      rename:
+        Teritorija: name
+        Dzīvesvietas norādīšana: residents
+        Dzīvesvietas deklarēšana: declared
+        Dzīvesvietas reģistrēšana: registered
+        Nav spēkā reģistrācija dzīvesvietā: registration_expired
+        Kopā: total
     processed:
-      data: data/processed/cases_by_mun.csv
-      metadata: data/processed/cases_by_mun_meta.yaml
+      path: data/processed/population.csv

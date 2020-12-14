@@ -14,12 +14,17 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 download:
 	python scripts/download.py
 
-## Clean data
-clean:
+## Preprocess data
+preprocess:
 	python scripts/clean.py	
 
 ## Download and clean
 data: download clean
+
+## Clean data
+clean:
+	rm -rf data/raw/*
+	rm -rf data/processed/*
 
 	
 
