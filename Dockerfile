@@ -3,10 +3,10 @@ COPY . /app
 WORKDIR /app
 
 FROM common as data
-RUN pip install --no-cache-dir -r requirements.data.txt
+RUN pip install --no-cache-dir -r requirements/data.txt
 ENTRYPOINT [ "python" ]
 
 FROM common as dashboard
-RUN pip install --no-cache-dir -r requirements.dashboard.txt
+RUN pip install --no-cache-dir -r requirements/dashboard.txt
 ENTRYPOINT [ "streamlit" ]
 CMD [ "run", "dashboard/main.py" ]
