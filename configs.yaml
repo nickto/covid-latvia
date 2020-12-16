@@ -18,7 +18,7 @@ data:
         ApstiprinataCOVID19InfekcijaSkaits: positive
         Ipatsvars: positive_proportion
         IzarstetoPacientuSkaits: recovered
-        MirusoPersonuSkaits: died
+        MirusoPersonuSkaits: deaths
         ApstiprinatiVecGr_0-9Gadi: positive_0y_to_9y
         ApstiprinatiVecGr_10-19Gadi: positive_10y_to_19y
         ApstiprinatiVecGr_20-29Gadi: positive_20y_to_29y
