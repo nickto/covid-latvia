@@ -19,7 +19,7 @@ services:
     command:
       - run
       - ./dashboard/main.py
-    restart: on-failure
+    restart: unless-stopped
   data:
     build:
       context: .
