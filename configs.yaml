@@ -12,7 +12,6 @@ data:
       quotechar: "\""
       na_values: 
         - "..."
-        - "…"
       rename:
         Datums: date
         TestuSkaits: tests
