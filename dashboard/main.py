@@ -91,6 +91,8 @@ population_latvia = population.loc["VISA LATVIJA", "total"]
 
 # Read in cases
 cases = pd.read_csv(configs["data"]["cases"]["processed"]["path"])
+# Read in cases metadata
+cases_meta = yaml.load(open(configs["data"]["cases"]["processed"]["path"] + ".meta.yaml", "r"))
 # Remove trailing dot in dates, so it is parsable
 cases.loc[:, "date"] = cases.loc[:, "date"].apply(lambda d: d[:-1])
 # Convert string date to actual date
@@ -121,6 +123,7 @@ cases.loc[:,
 # Page layout
 st.set_page_config(page_title="Latvia COVID-19", page_icon="🏥")
 st.title("COVID-19 Latvia")
+st.write("Data last updated on", pd.to_datetime(cases_meta["last_modified"]).strftime("%Y-%m-%d %H:%M"))
 
 summarize_by_values = {
     "summary": "Summary",
