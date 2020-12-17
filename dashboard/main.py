@@ -218,7 +218,7 @@ elif summarize_by == summarize_by_values["daily"]:
 
     st.stop()
 elif summarize_by == summarize_by_values["14d_sum"]:
-    st.header("4-day sum")
+    st.header("14-day sum")
 
     st.subheader("14-day cumulative cases")
     p = plot_ts(cases.date, cases.cases_14_days_sum)
