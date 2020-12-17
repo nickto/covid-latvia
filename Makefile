@@ -1,4 +1,4 @@
-.PHONY: clean 
+.PHONY: clean download preprocess data start stop
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -25,6 +25,14 @@ data: clean download preprocess
 clean:
 	rm -rf data/raw/*
 	rm -rf data/processed/*
+
+## Start serving dashboard
+start:
+	docker-compose down && docker-compose up -d --remove-orphans dashboard
+
+## Stop serving dashboard
+start:
+	docker-compose down
 
 #################################################################################
 # PROJECT RULES                                                                 #
