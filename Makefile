@@ -31,7 +31,7 @@ start:
 	docker-compose down && docker-compose up -d --remove-orphans dashboard
 
 ## Stop serving dashboard
-start:
+stop:
 	docker-compose down
 
 #################################################################################
