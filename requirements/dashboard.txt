@@ -3,5 +3,6 @@ pandas
 pyyaml
 requests
 plotly
+gunicorn
 dash
 dash-bootstrap-components

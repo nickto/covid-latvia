@@ -8,5 +8,5 @@ ENTRYPOINT [ "python" ]
 
 FROM common as dashboard
 RUN pip install --no-cache-dir -r requirements/dashboard.txt
-ENTRYPOINT [ "streamlit" ]
+ENTRYPOINT [ "dashboard" ]
 CMD [ "run", "dashboard/main.py" ]

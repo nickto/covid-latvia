@@ -6,20 +6,29 @@ services:
       dockerfile: Dockerfile
       target: dashboard
     user: root
-    environment:
-      - STREAMLIT_BROWSER_SERVER_ADDRESS=0.0.0.0
-      - STREAMLIT_SERVER_PORT=8501
     ports:
-      - "8501:8501"
+      - "8050:8050"
     volumes:
       - .:/app
     working_dir: /app
-    entrypoint:
-      - streamlit
-    command:
-      - run
-      - ./dashboard/main.py
+    entrypoint: gunicorn
+    command: index:server -b :8050
     restart: unless-stopped
+    
+  dashboard-debug:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dashboard
+    user: root
+    ports:
+      - "8051:8051"
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: python
+    command: index.py
+
   data:
     build:
       context: .
