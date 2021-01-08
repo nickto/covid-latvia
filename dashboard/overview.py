@@ -23,14 +23,15 @@ layout = dbc.Container([
     dbc.Container([
         html.H1("Overview"),
         html.Div([
+            html.H2("Data freshness"),
             html.Table(html.Tbody([
                 html.Tr([
                     html.Td("Last date in the data:"),
-                    html.Td(id=ID_PREFIX + "-data-last-date")
+                    html.Td(id=ID_PREFIX + "-data-last-date", style={"padding-left": "1em"})
                 ]),
                 html.Tr([
                     html.Td("Last updated on:"),
-                    html.Td(id=ID_PREFIX + "-data-last-date-updated")
+                    html.Td(id=ID_PREFIX + "-data-last-date-updated", style={"padding-left": "1em"})
                 ]),
             ]), id=ID_PREFIX + "-last-date-table")
         ]),
@@ -103,9 +104,9 @@ def _get_summary(df, col, display_name):
 
     return html.Tr([
         html.Td(display_name),
-        html.Td(value_fmtd),
-        html.Td(direction_1d),
-        html.Td(direction_7d)
+        html.Td(value_fmtd, style={"text-align": "right", "padding-left": "1em"}),
+        html.Td(direction_1d, style={"text-align": "center"}),
+        html.Td(direction_7d, style={"text-align": "center"})
     ])
 
 
@@ -129,9 +130,9 @@ def update_summary_table(_):
         html.Thead(
             html.Tr([
                 html.Td(),
-                html.Td(),
-                html.Td("Since yesterday"),
-                html.Td("Since last week"),
+                html.Td(style={"padding-left": "1em"}),
+                html.Td("Since yesterday", style={"padding-left": "1em"}),
+                html.Td("Since last week", style={"padding-left": "1em"}),
             ])),
         html.Tbody(rows),
     ])
@@ -174,7 +175,7 @@ def render_14_day_plot(_):
                           "displayModeBar": False,
                       },
                       id=ID_PREFIX + "-cases-graph")),
-    ])
+    ], style={"margin-top": "1ex"})
 
     return layout
 

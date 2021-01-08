@@ -26,15 +26,15 @@ layout = dbc.Container([
         dbc.Card([
             dbc.CardHeader("Cases and deaths, 14-day cumulative sum per 100,000 inhabitants"),
             dbc.CardBody(id=ID_PREFIX + "-cases-and-deaths"),
-        ]),
+        ], style={"margin-top": "1ex"}),
         dbc.Card([
             dbc.CardHeader("Positivity rate, 14-day mean"),
             dbc.CardBody(id=ID_PREFIX + "-positivity-rate"),
-        ]),
+        ], style={"margin-top": "1ex"}),
         dbc.Card([
             dbc.CardHeader("Tests, 14-day cumulative sum per 100,000 inhabitants"),
             dbc.CardBody(id=ID_PREFIX + "-tests"),
-        ]),
+        ], style={"margin-top": "1ex"}),
 
     ])
 ], id=ID_PREFIX + "-container")

@@ -26,15 +26,15 @@ layout = dbc.Container([
         dbc.Card([
             dbc.CardHeader("Cases and deaths"),
             dbc.CardBody(id=ID_PREFIX + "-cases-and-deaths"),
-        ]),
+        ], style={"margin-top": "1ex"}),
         dbc.Card([
             dbc.CardHeader("Positivity rate"),
             dbc.CardBody(id=ID_PREFIX + "-positivity-rate"),
-        ]),
+        ], style={"margin-top": "1ex"}),
         dbc.Card([
             dbc.CardHeader("Tests"),
             dbc.CardBody(id=ID_PREFIX + "-tests"),
-        ]),
+        ], style={"margin-top": "1ex"}),
 
     ])
 ], id=ID_PREFIX + "-container")
