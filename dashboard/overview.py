@@ -183,4 +183,4 @@ def render_14_day_plot(_):
               Input(ID_PREFIX + "-cases-graph", "relayoutData"),
               State(ID_PREFIX + "-cases-graph", "figure"))
 def update_yaxis_range(xaxis_range, fig):
-    return plots.update_yaxis_range(xaxis_range, fig)
+    return plots._update_yaxis_range(xaxis_range, fig)

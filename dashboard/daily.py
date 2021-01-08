@@ -40,87 +40,28 @@ layout = dbc.Container([
 ], id=ID_PREFIX + "-container")
 # yapf: enable
 
+plots.gen_2_cols_plot_from_cases_callbacks(
+    x="date",
+    y1="cases",
+    y2="deaths",
+    y1_name="Cases",
+    y2_name="Deaths",
+    initial_trigger_id=ID_PREFIX + "-container",
+    parent_id=ID_PREFIX + "-cases-and-deaths",
+    app=app,
+    hovertemplate="<b>%{x}</b><br>%{y:,.0f}<extra></extra>")
 
-@app.callback(Output(ID_PREFIX + "-cases-and-deaths", "children"),
-              Input(ID_PREFIX + "-container", "children"))
-def foo(_):
-    cases = app_data.read_cases()
+plots.gen_col_plot_from_cases_callbacks(
+    x="date",
+    y="positivity_rate",
+    initial_trigger_id=ID_PREFIX + "-container",
+    parent_id=ID_PREFIX + "-positivity-rate",
+    app=app)
 
-    fig = go.Figure(
-        data=[
-            go.Scatter(
-                x=pd.to_datetime(cases["date"]),
-                y=cases["cases"],
-                name="Cases",
-                yaxis="y1",
-                hovertemplate="<b>%{x}</b><br>%{y:,.0f}<extra></extra>",
-            ),
-            go.Scatter(
-                x=pd.to_datetime(cases["date"]),
-                y=cases["deaths"],
-                name="Deaths",
-                yaxis="y2",
-                hovertemplate="<b>%{x}</b><br>%{y:,.0f}<extra></extra>",
-            ),
-        ],
-        layout=go.Layout(title="Cases and deaths",
-                         yaxis=dict(title="Cases"),
-                         yaxis2=dict(title="Deaths",
-                                     overlaying="y",
-                                     side="right"),
-                         legend=dict(x=0, y=1)),
-    )
-
-    fig.update_xaxes(rangeslider_visible=True, showspikes=True)
-    fig.update_yaxes(showspikes=True, rangemode="tozero")
-
-    fig.layout.margin = go.layout.Margin(t=0, b=0, l=0, r=0)
-
-    return dcc.Graph(figure=fig,
-                     config={
-                         "displaylogo":
-                         False,
-                         "displayModeBar":
-                         False,
-                         "modeBarButtonsToRemove":
-                         ["toggleSpikelines", "autoScale2d"],
-                     },
-                     id=ID_PREFIX + "-cases-and-deaths-graph")
-
-
-@app.callback(Output(ID_PREFIX + "-cases-and-deaths-graph", "figure"),
-              Input(ID_PREFIX + "-cases-and-deaths-graph", "relayoutData"),
-              State(ID_PREFIX + "-cases-and-deaths-graph", "figure"))
-def update_yaxis_range(xaxis_range, fig):
-    return plots.update_double_yaxis_range(xaxis_range, fig)
-
-
-@app.callback(Output(ID_PREFIX + "-positivity-rate", "children"),
-              Input(ID_PREFIX + "-container", "children"))
-def foo(_):
-    cases = app_data.read_cases()
-
-    fig = go.Figure(data=[
-        go.Scatter(
-            x=pd.to_datetime(cases["date"]),
-            y=cases["positivity_rate"],
-            name="Cases",
-            hovertemplate="<b>%{x}</b><br>%{y:,.2f}<extra></extra>",
-        ),
-    ], )
-
-    fig.update_xaxes(rangeslider_visible=True, showspikes=True)
-    fig.update_yaxes(showspikes=True)
-
-    fig.layout.margin = go.layout.Margin(t=0, b=0, l=0, r=0)
-
-    return dcc.Graph(figure=fig,
-                     config={
-                         "displaylogo":
-                         False,
-                         "displayModeBar":
-                         False,
-                         "modeBarButtonsToRemove":
-                         ["toggleSpikelines", "autoScale2d"],
-                     },
-                     id=ID_PREFIX + "-cases-and-deaths-graph")
+plots.gen_col_plot_from_cases_callbacks(
+    x="date",
+    y="tests",
+    initial_trigger_id=ID_PREFIX + "-container",
+    parent_id=ID_PREFIX + "-tests",
+    hovertemplate="<b>%{x}</b><br>%{y:,.0f}<extra></extra>",
+    app=app)
