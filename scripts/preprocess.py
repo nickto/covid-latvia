@@ -22,7 +22,7 @@ def get_n_day_mean(source_col, target_col, df, n=14):
     source_idx = df.columns.get_loc(source_col)
     # Rewrite first n observations with regular cummean, because rolling mean
     # leaves NAs in the first n - 1 places
-    df.iloc[:n, target_idx] = df.iloc[:n, source_idx].expanding().sum()
+    df.iloc[:n, target_idx] = df.iloc[:n, source_idx].expanding().mean()
     return df
 
 
@@ -61,10 +61,12 @@ if __name__ == "__main__":
     # Compute 14-day cumulative indicators
     cases = get_n_day_sum("cases", "cases_14_days_sum", cases)
     cases = get_n_day_sum("deaths", "deaths_14_days_sum", cases)
+    cases = get_n_day_sum("tests", "tests_14_days_sum", cases)
 
     # Compute 14-day mean indicators
     cases = get_n_day_mean("cases", "cases_14_days_mean", cases)
     cases = get_n_day_mean("deaths", "deaths_14_days_mean", cases)
+    cases = get_n_day_mean("positivity_rate", "positivity_rate_14_days_mean", cases)
 
     # Compute per 100K indicators
     population_latvia = population.loc["VISA LATVIJA", "total"]
@@ -74,6 +76,9 @@ if __name__ == "__main__":
     cases.loc[:, f"{col:s}_per_100K"] = cases.loc[:, col] * multiplier
 
     col = "deaths_14_days_sum"
+    cases.loc[:, f"{col:s}_per_100K"] = cases.loc[:, col] * multiplier
+
+    col = "tests_14_days_sum"
     cases.loc[:, f"{col:s}_per_100K"] = cases.loc[:, col] * multiplier
 
     # Save

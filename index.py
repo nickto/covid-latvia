@@ -5,6 +5,7 @@ from dash.dependencies import Input, Output
 from app import app
 from dashboard import overview
 from dashboard import daily
+from dashboard import two_weeks
 
 server = app.server
 
@@ -22,6 +23,8 @@ def display_page(pathname):
         return overview.layout
     elif pathname in ("/daily"):
         return daily.layout
+    elif pathname in ("/14day"):
+        return two_weeks.layout
     else:
         return "404"
 

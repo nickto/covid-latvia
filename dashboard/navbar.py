@@ -23,6 +23,7 @@ def gen_layout(active=None):
             dbc.Nav([
                 _gen_nav_time("Overview", "/overview", active),
                 _gen_nav_time("Daily", "/daily", active),
+                _gen_nav_time("14-day period", "/14day", active),
             ], horizontal="end", navbar=True),
         ],
     )
