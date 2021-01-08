@@ -13,6 +13,7 @@ from app import app
 
 from dashboard import navbar
 from dashboard import app_data
+from dashboard import plots
 
 ID_PREFIX = "overview"
 
@@ -178,30 +179,8 @@ def render_14_day_plot(_):
     return layout
 
 
-@app.callback(
-    # Output("bar", "children"),
-    Output(ID_PREFIX + "-cases-graph", "figure"),
-    Input(ID_PREFIX + "-cases-graph", "relayoutData"),
-    State(ID_PREFIX + "-cases-graph", "figure"))
-def foobar(xaxis_range, fig):
-    if fig is None or xaxis_range is None or "xaxis.range" not in xaxis_range:
-        return dash.no_update
-
-    # Get new range
-    begin, end = xaxis_range["xaxis.range"]
-
-    # Find max y in the new range
-    data = zip(fig["data"][0]["x"], fig["data"][0]["y"])
-    y_max = max([y for x, y in data if x >= begin and x <= end])
-
-    # Make sure range slider does not change range
-    fig["layout"]["xaxis"]["rangeslider"]["yaxis"]["range"] = [
-        min(fig["data"][0]["y"]) - 0.05 * max(fig["data"][0]["y"]),
-        1.05 * max(fig["data"][0]["y"]),
-    ]
-    fig["layout"]["xaxis"]["rangeslider"]["yaxis"]["rangemode"] = "normal"
-
-    # Change range of graph
-    fig["layout"]["yaxis"]["range"][1] = 1.05 * y_max
-    fig["layout"]["yaxis"]["autorange"] = False
-    return fig
+@app.callback(Output(ID_PREFIX + "-cases-graph", "figure"),
+              Input(ID_PREFIX + "-cases-graph", "relayoutData"),
+              State(ID_PREFIX + "-cases-graph", "figure"))
+def update_yaxis_range(xaxis_range, fig):
+    return plots.update_yaxis_range(xaxis_range, fig)

@@ -14,6 +14,7 @@ import pandas as pd
 from app import app
 
 from dashboard import navbar
+from dashboard import plots
 
 ID_PREFIX = "daily"
 
@@ -25,10 +26,6 @@ layout = dbc.Container([
         dbc.Card([
             dbc.CardHeader("Cases and deaths"),
             dbc.CardBody(id=ID_PREFIX + "-cases-and-deaths"),
-        ]),
-        dbc.Card([
-            dbc.CardHeader("Deaths"),
-            dbc.CardBody(id=ID_PREFIX + "-deaths"),
         ]),
         dbc.Card([
             dbc.CardHeader("Positivity rate"),
@@ -66,11 +63,12 @@ def foo(_):
                 hovertemplate="<b>%{x}</b><br>%{y:,.0f}<extra></extra>",
             ),
         ],
-        layout=go.Layout(
-            title="Cases and deaths",
-            yaxis=dict(title="Cases"),
-            yaxis2=dict(title="Deaths", overlaying="y", side="right"),
-        ),
+        layout=go.Layout(title="Cases and deaths",
+                         yaxis=dict(title="Cases"),
+                         yaxis2=dict(title="Deaths",
+                                     overlaying="y",
+                                     side="right"),
+                         legend=dict(x=0, y=1)),
     )
 
     fig.update_xaxes(rangeslider_visible=True, showspikes=True)
@@ -80,12 +78,12 @@ def foo(_):
 
     return dcc.Graph(figure=fig,
                      config={
-                         "displaylogo": False,
-                         "displayModeBar": False,
-                         "modeBarButtonsToRemove": [
-                             "toggleSpikelines",
-                             "autoScale2d"
-                         ],
+                         "displaylogo":
+                         False,
+                         "displayModeBar":
+                         False,
+                         "modeBarButtonsToRemove":
+                         ["toggleSpikelines", "autoScale2d"],
                      },
                      id=ID_PREFIX + "-cases-and-deaths-graph")
 
@@ -94,37 +92,35 @@ def foo(_):
               Input(ID_PREFIX + "-cases-and-deaths-graph", "relayoutData"),
               State(ID_PREFIX + "-cases-and-deaths-graph", "figure"))
 def update_yaxis_range(xaxis_range, fig):
-    if fig is None or xaxis_range is None or "xaxis.range" not in xaxis_range:
-        return dash.no_update
+    return plots.update_double_yaxis_range(xaxis_range, fig)
 
-    # Get new range
-    begin, end = xaxis_range["xaxis.range"]
 
-    # Find max y in the new range
-    data = zip(fig["data"][0]["x"], fig["data"][0]["y"])
-    y_max1 = max([y for x, y in data if x >= begin and x <= end])
+@app.callback(Output(ID_PREFIX + "-positivity-rate", "children"),
+              Input(ID_PREFIX + "-container", "children"))
+def foo(_):
+    cases = app_data.read_cases()
 
-    data = zip(fig["data"][1]["x"], fig["data"][1]["y"])
-    y_max2 = max([y for x, y in data if x >= begin and x <= end])
+    fig = go.Figure(data=[
+        go.Scatter(
+            x=pd.to_datetime(cases["date"]),
+            y=cases["positivity_rate"],
+            name="Cases",
+            hovertemplate="<b>%{x}</b><br>%{y:,.2f}<extra></extra>",
+        ),
+    ], )
 
-    logging.warning(y_max1)
-    logging.warning(y_max2)
+    fig.update_xaxes(rangeslider_visible=True, showspikes=True)
+    fig.update_yaxes(showspikes=True)
 
-    # Make sure range slider does not change range
-    for i, yaxis in enumerate(["yaxis", "yaxis2"]):
-        fig["layout"]["xaxis"]["rangeslider"][yaxis]["range"] = [
-            min(fig["data"][i]["y"]) - 0.05 * max(fig["data"][i]["y"]),
-            1.05 * max(fig["data"][i]["y"]),
-        ]
-        fig["layout"]["xaxis"]["rangeslider"][yaxis]["rangemode"] = "normal"
+    fig.layout.margin = go.layout.Margin(t=0, b=0, l=0, r=0)
 
-    # Change range of graph
-    fig["layout"]["yaxis"]["range"][1] = 1.05 * y_max1
-    fig["layout"]["yaxis"]["autorange"] = False
-
-    fig["layout"]["yaxis2"]["range"][1] = 1.05 * y_max2
-    fig["layout"]["yaxis2"]["autorange"] = False
-
-    logging.warning(fig["layout"].keys())
-
-    return fig
+    return dcc.Graph(figure=fig,
+                     config={
+                         "displaylogo":
+                         False,
+                         "displayModeBar":
+                         False,
+                         "modeBarButtonsToRemove":
+                         ["toggleSpikelines", "autoScale2d"],
+                     },
+                     id=ID_PREFIX + "-cases-and-deaths-graph")
