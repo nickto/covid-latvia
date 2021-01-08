@@ -1,4 +1,5 @@
 import datetime
+import dash
 import logging
 import dash_core_components as dcc
 import dash_html_components as html
@@ -18,7 +19,7 @@ ID_PREFIX = "overview"
 # yapf: disable
 layout = dbc.Container([
     navbar.gen_layout(active="Overview"),
-    html.Div([
+    dbc.Container([
         html.H1("Overview"),
         html.Div([
             html.Table(html.Tbody([
@@ -138,14 +139,16 @@ def update_summary_table(_):
 @app.callback(Output(ID_PREFIX + "14day-plot-container", "children"),
               Input(ID_PREFIX + "-container", "children"))
 def render_14_day_plot(_):
+    col = "cases_14_days_sum_per_100K"
     cases = app_data.read_cases()
     fig = go.Figure(data=[
-        go.Scatter(x=cases["date"],
-                   y=cases["cases_14_days_sum_per_100K"],
+        go.Scatter(x=pd.to_datetime(cases["date"]),
+                   y=cases[col],
                    hovertemplate="<b>%{x}</b><br>%{y:.1f}<extra></extra>"),
     ])
 
     fig.update_xaxes(rangeslider_visible=True)
+    fig.update_yaxes(rangemode="tozero")
 
     last_date = pd.to_datetime(cases.loc[:, "date"]).max()
     last_date = last_date.date()
@@ -158,7 +161,7 @@ def render_14_day_plot(_):
         showspikes=True,
     )
 
-    fig.layout.yaxis.update(showspikes=True, )
+    fig.layout.yaxis.update(showspikes=True)
     fig.layout.margin = go.layout.Margin(t=0, b=0, l=0, r=0)
 
     layout = dbc.Card([
@@ -168,7 +171,38 @@ def render_14_day_plot(_):
                       config={
                           "displaylogo": False,
                           "displayModeBar": False,
-                      }))
+                      },
+                      id="foo")),
+        html.Div(id="bar")
     ])
 
     return layout
+
+
+@app.callback(
+    # Output("bar", "children"),
+    Output("foo", "figure"),
+    Input("foo", "relayoutData"),
+    State("foo", "figure"))
+def foobar(xaxis_range, fig):
+    if fig is None or xaxis_range is None or "xaxis.range" not in xaxis_range:
+        return dash.no_update
+
+    # Get new range
+    begin, end = xaxis_range["xaxis.range"]
+
+    # Find max y in the new range
+    data = zip(fig["data"][0]["x"], fig["data"][0]["y"])
+    y_max = max([y for x, y in data if x >= begin and x <= end])
+
+    # Make sure range slider does not change range
+    fig["layout"]["xaxis"]["rangeslider"]["yaxis"]["range"] = [
+        min(fig["data"][0]["y"]) - 0.05 * max(fig["data"][0]["y"]),
+        1.05 * max(fig["data"][0]["y"]),
+    ]
+    fig["layout"]["xaxis"]["rangeslider"]["yaxis"]["rangemode"] = "normal"
+
+    # Change range of graph
+    fig["layout"]["yaxis"]["range"][1] = 1.05 * y_max
+    fig["layout"]["yaxis"]["autorange"] = False
+    return fig
