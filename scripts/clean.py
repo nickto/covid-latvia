@@ -30,8 +30,8 @@ def clean(resource_configs):
         df = df.rename(resource_configs["raw"]["rename"], axis=1)
 
     # Save
-    filepath = resource_configs["processed"]["path"]
-    print(f"Saving processed data to {filepath:s}.")
+    filepath = resource_configs["clean"]["path"]
+    print(f"Saving clean data to {filepath:s}.")
     df.to_csv(filepath, index=False)
     yaml.safe_dump(metadata,
                    open(filepath + ".meta.yaml", "w"),

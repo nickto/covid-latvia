@@ -29,6 +29,9 @@ data:
         ApstiprinatiVecGr_70GadiUnVairak: cases_70y_and_older
         ApstiprinatiVecGr_70-79Gadi: cases_70y_to_79y
         ApstiprinatiVecGr_80GadiUnVairak: cases_80y_and_older
+    clean: 
+      path: data/clean/cases.csv
+      format: csv
     processed: 
       path: data/processed/cases.csv
       format: csv
@@ -50,6 +53,9 @@ data:
           ApstiprinataCOVID19infekcija: cases
           AktivaCOVID19infekcija: sick
           14DienuKumulativaSaslimstiba: cases_14_days
+    clean: 
+        path: data/clean/cases_by_mun.csv
+        format: csv
     processed: 
         path: data/processed/cases_by_mun.csv
         format: csv
@@ -68,5 +74,9 @@ data:
         Dzīvesvietas reģistrēšana: registered
         Nav spēkā reģistrācija dzīvesvietā: registration_expired
         Kopā: total
+    clean:
+      path: data/clean/population.csv
+      format: csv
     processed:
       path: data/processed/population.csv
+      format: csv

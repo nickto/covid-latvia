@@ -3,12 +3,14 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 from app import app
-from dashboard import summary
+from dashboard import overview
+from dashboard import daily
 
 server = app.server
 
 app.layout = html.Div([
     dcc.Location(id="url", refresh=False),
+    # 2f33271e16
     html.Div(id="page-content")
 ])
 
@@ -16,8 +18,10 @@ app.layout = html.Div([
 @app.callback(Output("page-content", "children"),
               Input("url", "pathname"))
 def display_page(pathname):
-    if pathname in ("/", "summary"):
-        return summary.layout
+    if pathname in ("/", "/overview"):
+        return overview.layout
+    elif pathname in ("/daily"):
+        return daily.layout
     else:
         return "404"
 

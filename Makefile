@@ -17,7 +17,8 @@ download:
 
 ## Preprocesses data
 preprocess:
-	docker-compose run data scripts/clean.py	
+	docker-compose run data scripts/clean.py
+	docker-compose run data scripts/preprocess.py
 
 ## Downloads and clean
 data: clean download preprocess
