@@ -1,38 +1,49 @@
-.PHONY: clean download preprocess data start stop
+.PHONY: clean download preprocess data start stop requirements activate
 
 #################################################################################
 # GLOBALS                                                                       #
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+VENV_PATH=covid-latvia-env
 
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
 
-## Download data
+## Downloads data
 download:
 	docker-compose run data scripts/download.py
 
-## Preprocess data
+## Preprocesses data
 preprocess:
 	docker-compose run data scripts/clean.py	
 
-## Download and clean
+## Downloads and clean
 data: clean download preprocess
 
-## Clean data
+## Cleans data
 clean:
 	rm -rf data/raw/*
 	rm -rf data/processed/*
 
-## Start serving dashboard
+## Starts serving dashboard
 start:
 	docker-compose down && docker-compose up -d --remove-orphans dashboard
 
-## Stop serving dashboard
+## Stops serving dashboard
 stop:
 	docker-compose down
+
+## Creates virtual environment and install requirements for development
+requirements:
+	python -m venv --clear --upgrade-deps ${VENV_PATH}
+	source ${VENV_PATH}/bin/activate && pip install --no-cache-dir -r requirements/data.txt
+	source ${VENV_PATH}/bin/activate && pip install --no-cache-dir -r requirements/dashboard.txt
+
+## Returns path to the environment activation script, enabling `. $(make activate)`
+activate:
+	@echo ${VENV_PATH}/bin/activate
 
 #################################################################################
 # PROJECT RULES                                                                 #
