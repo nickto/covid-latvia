@@ -172,8 +172,7 @@ def render_14_day_plot(_):
                           "displaylogo": False,
                           "displayModeBar": False,
                       },
-                      id="foo")),
-        html.Div(id="bar")
+                      id=ID_PREFIX + "-cases-graph")),
     ])
 
     return layout
@@ -181,9 +180,9 @@ def render_14_day_plot(_):
 
 @app.callback(
     # Output("bar", "children"),
-    Output("foo", "figure"),
-    Input("foo", "relayoutData"),
-    State("foo", "figure"))
+    Output(ID_PREFIX + "-cases-graph", "figure"),
+    Input(ID_PREFIX + "-cases-graph", "relayoutData"),
+    State(ID_PREFIX + "-cases-graph", "figure"))
 def foobar(xaxis_range, fig):
     if fig is None or xaxis_range is None or "xaxis.range" not in xaxis_range:
         return dash.no_update
