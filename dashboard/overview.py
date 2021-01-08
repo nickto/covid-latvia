@@ -1,10 +1,12 @@
+import datetime
+import logging
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from dash.dependencies import Input, Output
-from dash_html_components.Thead import Thead
+from dash.dependencies import Input, Output, State
 import pandas as pd
-import yaml
+import plotly.graph_objects as go
+import plotly.express as px
 
 from app import app
 
@@ -33,9 +35,10 @@ layout = dbc.Container([
         html.Div([
             html.H2("Summary"),
             html.Div(id=ID_PREFIX + "-summary-container")
-        ], id=ID_PREFIX + "-summary-section"),
+        ]),
+        html.Div(id=ID_PREFIX + "14day-plot-container"),
     ]),
-])
+], id=ID_PREFIX + "-container")
 # yapf: enable
 
 
@@ -59,16 +62,21 @@ def update_last_dates(_):
 def _get_direction(current, past, lower_is_better=True):
     if current > past:
         if lower_is_better:
-            return html.I(className="fas fa-arrow-up", style={"color": "DarkRed"})
+            return html.I(className="fas fa-arrow-up",
+                          style={"color": "DarkRed"})
         else:
-            return html.I(className="fas fa-arrow-up", style={"color": "DarkGreen"})
+            return html.I(className="fas fa-arrow-up",
+                          style={"color": "DarkGreen"})
     elif current < past:
         if lower_is_better:
-            return html.I(className="fas fa-arrow-down", style={"color": "DarkGreen"})
+            return html.I(className="fas fa-arrow-down",
+                          style={"color": "DarkGreen"})
         else:
-            return html.I(className="fas fa-arrow-down", style={"color": "DarkRed"})
+            return html.I(className="fas fa-arrow-down",
+                          style={"color": "DarkRed"})
     else:
-        return html.I(className="fas fa-arrow-right", style={"color": "DarkOrange"})
+        return html.I(className="fas fa-arrow-right",
+                      style={"color": "DarkOrange"})
 
 
 def _get_summary(df, col, display_name):
@@ -100,7 +108,7 @@ def _get_summary(df, col, display_name):
 
 
 @app.callback(Output(ID_PREFIX + "-summary-container", "children"),
-              Input(ID_PREFIX + "-summary-section", "children"))
+              Input(ID_PREFIX + "-container", "children"))
 def update_summary_table(_):
     cases = app_data.read_cases()
 
@@ -116,11 +124,51 @@ def update_summary_table(_):
     rows.append(_get_summary(cases, "tests", "Tests"))
 
     return html.Table([
-        html.Thead(html.Tr([
-            html.Td(),
-            html.Td(),
-            html.Td("Since yesterday"),
-            html.Td("Since last week"),
-        ])),
+        html.Thead(
+            html.Tr([
+                html.Td(),
+                html.Td(),
+                html.Td("Since yesterday"),
+                html.Td("Since last week"),
+            ])),
         html.Tbody(rows),
     ])
+
+
+@app.callback(Output(ID_PREFIX + "14day-plot-container", "children"),
+              Input(ID_PREFIX + "-container", "children"))
+def render_14_day_plot(_):
+    cases = app_data.read_cases()
+    fig = go.Figure(data=[
+        go.Scatter(x=cases["date"],
+                   y=cases["cases_14_days_sum_per_100K"],
+                   hovertemplate="<b>%{x}</b><br>%{y:.1f}<extra></extra>"),
+    ])
+
+    fig.update_xaxes(rangeslider_visible=True)
+
+    last_date = pd.to_datetime(cases.loc[:, "date"]).max()
+    last_date = last_date.date()
+    initial_range = (
+        last_date - datetime.timedelta(days=90),
+        last_date,
+    )
+    fig.layout.xaxis.update(
+        range=initial_range,
+        showspikes=True,
+    )
+
+    fig.layout.yaxis.update(showspikes=True, )
+    fig.layout.margin = go.layout.Margin(t=0, b=0, l=0, r=0)
+
+    layout = dbc.Card([
+        dbc.CardHeader("14-day cumulative cases per 100,000 inhabitants"),
+        dbc.CardBody(
+            dcc.Graph(figure=fig,
+                      config={
+                          "displaylogo": False,
+                          "displayModeBar": False,
+                      }))
+    ])
+
+    return layout
