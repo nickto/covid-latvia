@@ -1,5 +1,6 @@
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 from dash_html_components.Thead import Thead
 import pandas as pd
@@ -13,8 +14,8 @@ from dashboard import app_data
 ID_PREFIX = "overview"
 
 # yapf: disable
-layout = html.Div([
-    navbar.gen_layout(),
+layout = dbc.Container([
+    navbar.gen_layout(active="Overview"),
     html.Div([
         html.H1("Overview"),
         html.Div([
@@ -34,7 +35,6 @@ layout = html.Div([
             html.Div(id=ID_PREFIX + "-summary-container")
         ], id=ID_PREFIX + "-summary-section"),
     ]),
-
 ])
 # yapf: enable
 

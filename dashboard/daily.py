@@ -7,5 +7,5 @@ from app import app
 from dashboard import navbar
 
 layout = html.Div([
-    navbar.gen_layout(),
+    navbar.gen_layout(active="Daily"),
 ])
