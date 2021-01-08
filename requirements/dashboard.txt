@@ -1,8 +1,7 @@
-matplotlib
 numpy
 pandas
 pyyaml
-seaborn
-streamlit
 requests
-bokeh
+plotly
+dash
+dash-bootstrap-components
